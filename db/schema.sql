@@ -1,7 +1,5 @@
 CREATE DATABASE hr;
 
-\c hr;
-
 Create table department (
     id serial primary key,
     name varchar(30) not null
