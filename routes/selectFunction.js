@@ -10,7 +10,7 @@ export async function viewAll(tableName) {
 
   try {
     const res = await pool.query(`SELECT * FROM ${tableName}`);
-    console.log(res.rows);
+    console.table(res.rows);
   } catch (err) {
     console.error(err);
   }

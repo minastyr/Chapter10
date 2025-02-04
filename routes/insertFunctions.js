@@ -1,6 +1,9 @@
 import { pool } from '../db/connection.js';
 import inquirer from 'inquirer';
 
+
+let departmentChoices;
+
 export async function addDepartment() {
   const answers = await inquirer.prompt([
     {
@@ -27,6 +30,9 @@ export async function addRole() {
       value: dept.id
     }));
   
+    console.log(departmentChoices);
+
+
 } catch (err) {
       console.error(err);
   };
@@ -60,11 +66,13 @@ export async function addRole() {
 }
 
 export async function addEmployee() {
- //Picker for roles
+  let roleChoices = [];
+  let mgrChoices = [];
+
  try {
   const existingRoles = await pool.query('SELECT id, title FROM role');
   const roles = existingRoles.rows;
-  const roleChoices = roles.map(singleRole => ({
+  roleChoices = roles.map(singleRole => ({
     name: singleRole.title,
     value: singleRole.id
   }));
@@ -72,6 +80,7 @@ export async function addEmployee() {
 } catch (err) {
     console.error(err);
 };
+
 
  //picker for managers
  try {
@@ -82,9 +91,9 @@ export async function addEmployee() {
     WHERE role.title = 'Manager';
   `); 
   const managers = existingMgrs.rows;
-  const mgrChoices = managers.map(singleMgr => ({
-    name: singleMgr.first_name +' '+ singleMgr.last_name,
-    value: singleMgr.id
+  mgrChoices = managers.map(singleMgr => ({
+    name: singleMgr.role_id + '   ' + singleMgr.first_name +' '+ singleMgr.last_name,
+    value: singleMgr.role_id
   }));
 
 } catch (err) {
@@ -118,7 +127,8 @@ export async function addEmployee() {
     },
   ]);
   try {
-    const res = await pool.query('INSERT INTO employee (first_name, last_name, roleName, managerName) VALUES ($1, $2, $3, $4)', [answers.firstName, answers.lastName, answers.roleName, answers.managerName]);
+   
+    const res = await pool.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)', [answers.firstName, answers.lastName, answers.roleName, answers.managerName]);
     console.log('Employee added:');
   } catch (err) {
     console.error(err);
@@ -126,20 +136,50 @@ export async function addEmployee() {
 }
 
 export async function updateEmployeeRole() {
+
+  let roleChoices = [];
+  let empChoices = [];
+
+  try {
+    const existingRoles = await pool.query('SELECT id, title FROM role');
+    const roles = existingRoles.rows;
+    roleChoices = roles.map(singleRole => ({
+      name: singleRole.title,
+      value: singleRole.id
+    }));
+  
+  } catch (err) {
+      console.error(err);
+  };
+
+  try {
+    const existingEmps = await pool.query('SELECT id, first_name, last_name FROM employee');
+    const emps = existingEmps.rows;
+    empChoices = emps.map(singleEmp => ({
+      name: singleEmp.id + '   ' + singleEmp.first_name + ' ' + singleEmp.last_name,
+      value: singleEmp.id
+    }));
+  
+  } catch (err) {
+      console.error(err);
+  };
+
   const answers = await inquirer.prompt([
     {
-      type: 'input',
+      type: 'list',
       name: 'employeeId',
-      message: 'Enter the ID of the employee whose role you want to update:',
+      message: 'Which employee do you want to update? ',
+      choices: empChoices,
     },
     {
-      type: 'input',
+      type: 'list',
       name: 'newRoleId',
-      message: 'Enter the new role ID for the employee:',
+      message: 'Which role do you want to assign to the employee?',
+      choices: roleChoices,
     },
   ]);
   try {
-    const res = await pool.query('UPDATE employees SET role_id = $1 WHERE id = $2', [answers.newRoleId, answers.employeeId]);
+    const res = await pool.query('UPDATE employee SET role_id = $1 WHERE id = $2', [answers.newRoleId, answers.employeeId]);
     console.log('Employee role updated:');
   } catch (err) {
     console.error(err);
