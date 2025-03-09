@@ -21,16 +21,18 @@ export async function addDepartment() {
 }
 
 export async function addRole() {
+  let departmentChoices = [];
+
   try {
     //Need to lookup departments for picker
     const existingDepts = await pool.query('SELECT id, name FROM department');
     const departments = existingDepts.rows;
-    const departmentChoices = departments.map(dept => ({
+    departmentChoices = departments.map(dept => ({
       name: dept.name,
       value: dept.id
     }));
   
-    console.log(departmentChoices);
+    //console.log(departmentChoices);
 
 
 } catch (err) {
@@ -59,7 +61,7 @@ export async function addRole() {
   ]);
   try {
     const res = await pool.query('INSERT INTO role (title, salary, department) VALUES ($1, $2, $3)', [answers.roleName, answers.salary, answers.departmentId]);
-    console.log('Role added:');
+    console.log('Role added!');
   } catch (err) {
     console.error(err);
   }
@@ -92,8 +94,8 @@ export async function addEmployee() {
   `); 
   const managers = existingMgrs.rows;
   mgrChoices = managers.map(singleMgr => ({
-    name: singleMgr.role_id + '   ' + singleMgr.first_name +' '+ singleMgr.last_name,
-    value: singleMgr.role_id
+    name: singleMgr.id + '   ' + singleMgr.first_name +' '+ singleMgr.last_name,
+    value: singleMgr.id
   }));
 
 } catch (err) {
@@ -129,7 +131,7 @@ export async function addEmployee() {
   try {
    
     const res = await pool.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4)', [answers.firstName, answers.lastName, answers.roleName, answers.managerName]);
-    console.log('Employee added:');
+    console.log('Employee added!');
   } catch (err) {
     console.error(err);
   }
@@ -180,7 +182,7 @@ export async function updateEmployeeRole() {
   ]);
   try {
     const res = await pool.query('UPDATE employee SET role_id = $1 WHERE id = $2', [answers.newRoleId, answers.employeeId]);
-    console.log('Employee role updated:');
+    console.log('Employee role updated!');
   } catch (err) {
     console.error(err);
   }

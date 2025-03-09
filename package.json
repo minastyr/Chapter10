@@ -14,9 +14,9 @@
   "description": "",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "inquirer": "^12.3.2",
+    "inquirer": "^12.4.3",
     "inquiry": "^0.0.3",
-    "pg": "^8.13.1"
+    "pg": "^8.13.3"
   },
   "devDependencies": {
     "express": "^4.21.2",

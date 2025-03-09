@@ -1,10 +1,20 @@
 import express from 'express';
 import inquirer from 'inquirer';
 import { pool } from './db/connection.js';
-import { viewAll } from './routes/selectFunction.js';
+import { viewDepts, viewRoles, viewEmps } from './routes/selectFunction.js';
 import { addDepartment, addRole, addEmployee, updateEmployeeRole } from './routes/insertFunctions.js';
 
 const router = express.Router();
+const marqueeArt = `
+*************************************************
+*************************************************
+                Employee Manager 
+*************************************************
+*************************************************
+`;
+
+
+console.log(marqueeArt);
 
 async function gotoMain() {
   const answers = await inquirer.prompt([
@@ -28,13 +38,13 @@ async function gotoMain() {
   console.info('Answer:', answers.mainMenu);
   switch (answers.mainMenu) {
     case 'view all departments':
-      await viewAll('department');
+      await viewDepts();
       break;
     case 'view all roles':
-      await viewAll('role');
+      await viewRoles();
       break;
     case 'view all employees':
-      await viewAll('employee');
+      await viewEmps();
       break;
     case 'add a department':
       await addDepartment();
@@ -54,7 +64,10 @@ async function gotoMain() {
       break;
   }
 
-  gotoMain();
+  if (answers.mainMenu !== 'Exit') {
+    gotoMain();
+  }
 }
 
 gotoMain();
+export default router;

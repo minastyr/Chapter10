@@ -1,6 +1,7 @@
 import express from 'express';
-import { connectToDb } from './db/connection.js';
-import routes from './routes/index.js';
+import { connectToDb } from '../db/connection.js';
+import routes from '../index.js';
+//import { routes } from '../index.js';
 await connectToDb();
 
 const app = express();
