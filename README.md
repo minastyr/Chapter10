@@ -19,7 +19,7 @@ From the code location \src folder, run 'node server.js'.
 
 ## Usage
 Select the choice of function from the rolling list as demonstrated in the video
-at (https://drive.google.com/file/d/1mXnjaOOtHuzXScI5QhMaao-jr-QdW4Im/view).  Follow the prompts when adding or updating the records for the appropriate data.
+at (https://drive.google.com/file/d/1kklRtHXK-nk4kCcNjXoYQfyy_3Fs1VmD/view).  Follow the prompts when adding or updating the records for the appropriate data.
 Select EXIT when done.
 
 
